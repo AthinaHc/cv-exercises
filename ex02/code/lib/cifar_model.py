@@ -30,7 +30,16 @@ class ConvModel(nn.Module):
         #     kernel_size 3, stride 1, padding 1, followed by another batch norm and relu.
         # 3) Averagepooling (nn.AvgPool2d) with kernel size 16, stride 16.
         # 4) Linear layer (nn.Linear) with input_features=2 * num_filters, output_features=10.
-        raise NotImplementedError
+        self.conv1 = nn.Conv2d(in_channels=input_channels, out_channels=num_filters, kernel_size=3, 
+                               stride=2, padding=1)
+        self.batch_norm1 = nn.BatchNorm2d(num_features=num_filters)
+        self.relu1 = nn.ReLU()
+        self.conv2 = nn.Conv2d(in_channels=num_filters, out_channels=2*num_filters, kernel_size=3, 
+                               stride=1, padding=1)
+        self.batch_norm2 = nn.BatchNorm2d(num_features=2*num_filters)
+        self.relu2 = nn.ReLU()
+        self.avgPool = nn.AvgPool2d(kernel_size=16, stride=16)
+        self.linear = nn.Linear(in_features=2*num_filters, out_features=10)
         # END TODO ###################
 
     def forward(self, x: th.Tensor):
@@ -49,19 +58,23 @@ class ConvModel(nn.Module):
         # Apply first convolutional layer, batch norm and relu.
         # x = self.conv1(x)
         # ...
-        raise NotImplementedError
+        x = self.conv1(x)
+        x = self.batch_norm1(x)
+        x = self.relu1(x)
         # END TODO ###################
         if self.verbose:
             print(f"Shape after first layer: {x.shape}")
         # START TODO #################
         # Apply second convolutional layer, batch norm and relu
-        raise NotImplementedError
+        x = self.conv2(x)
+        x = self.batch_norm2(x)
+        x = self.relu2(x)
         # END TODO ###################
         if self.verbose:
             print(f"Shape after second layer: {x.shape}")
         # START TODO #################
         # Apply averagepool
-        raise NotImplementedError
+        x = self.avgPool(x)
         # END TODO ###################
         if self.verbose:
             print(f"Shape after averagepool: {x.shape}")
@@ -74,7 +87,7 @@ class ConvModel(nn.Module):
 
         # START TODO #################
         # Apply the linear.
-        raise NotImplementedError
+        x = self.linear(x)
         # END TODO ###################
         if self.verbose:
             print(f"Model output shape: {x.shape}")
